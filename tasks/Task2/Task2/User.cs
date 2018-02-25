@@ -50,6 +50,17 @@ namespace Task2
         public string LastName { get; set; }
 
         /// <summary>
+        /// Gets email.
+        /// </summary>
+        public string Email
+        {
+            get
+            {
+                return this.m_email;
+            }
+        }
+
+        /// <summary>
         /// Changes Password.
         /// </summary>
         /// <param name="old_password">Old password</param>
@@ -101,18 +112,6 @@ namespace Task2
         }
 
         /// <summary>
-        /// Saves password.
-        /// </summary>
-        /// <param name="password">Password</param>
-        private void SavePassword(string password)
-        {
-            new RNGCryptoServiceProvider().GetBytes(this.m_salt);
-
-            Array.Copy(this.m_salt, 0, this.m_hash, 0, 16);
-            Array.Copy(this.HashPassword(password), 0, this.m_hash, 16, 20);
-        }
-
-        /// <summary>
         /// Salt and pepper.
         /// </summary>
         /// <param name="password">Password</param>
@@ -123,6 +122,18 @@ namespace Task2
             return pbkdf2.GetBytes(20);
         }
 
+        /// <summary>
+        /// Saves password.
+        /// </summary>
+        /// <param name="password">Password</param>
+        private void SavePassword(string password)
+        {
+            new RNGCryptoServiceProvider().GetBytes(this.m_salt);
+
+            Array.Copy(this.m_salt, 0, this.m_hash, 0, 16);
+            Array.Copy(this.HashPassword(password), 0, this.m_hash, 16, 20);
+        }
+        
         /// <summary>
         /// Override method to see all content.
         /// </summary>
