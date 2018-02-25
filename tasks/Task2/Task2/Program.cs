@@ -16,32 +16,36 @@ namespace Task2
 
             if (a.CheckPassword("test"))
             {
-                Console.WriteLine("yes");
+                Console.WriteLine("Login success!");
             }
             else
             {
-                Console.WriteLine("no");
+                Console.WriteLine("Login failed!");
             }
 
-            if(a.ChangePassword("test", "test1"))
-                Console.WriteLine("changed password");
+            if (a.ChangePassword("test", "test1"))
+                Console.WriteLine("Changed password!");
+            else
+                Console.WriteLine("Passwort change failed!");
 
             a.Title = "Dr.";
             a.FirstName = "Test1";
             a.LastName = "Test1";
-            
+
             if (a.ChangeEmail("test1", "test1@test.com"))
-                Console.WriteLine("changed email");
+                Console.WriteLine("Changed email: " + a.Email);
+            else
+                Console.WriteLine("Email  change failed!");
 
             Console.WriteLine(a.ToString());
 
             if (a.CheckPassword("test"))
             {
-                Console.WriteLine("yes");
+                Console.WriteLine("Login success!");
             }
             else
             {
-                Console.WriteLine("no");
+                Console.WriteLine("Login failed!");
             }
         }
     }
