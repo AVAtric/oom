@@ -1,7 +1,7 @@
 # Objektorientierte Methoden (OOM)
   Object-Oriented Design (OOD) and Programming (OOP)
 
-### [Lesson 1 - Kick Off](https://github.com/AVAtric/oom/wiki/Lesson-1)
+### [Lesson 1 - Kick Off](https://github.com/bicoom/oom/wiki/Lesson-1)
   * Introduction and Guidelines
     * [Wiki](https://github.com/AVAtric/oom/wiki)
     * [Issues](https://github.com/AVAtric/oom/issues)
@@ -12,7 +12,7 @@
     * basic console app
     * C# for C programmers - first steps
 
-### [Lesson 2 - Fundamentals I](https://github.com/AVAtric/oom/wiki/Lesson-2)
+### [Lesson 2 - Fundamentals I](https://github.com/bicoom/oom/wiki/Lesson-2)
   * Concepts
     * classes
     * methods
@@ -21,7 +21,7 @@
   * Toolkit
     * web requests
 
-### [Lesson 3 - Fundamentals II](https://github.com/AVAtric/oom/wiki/Lesson-3)
+### [Lesson 3 - Fundamentals II](https://github.com/bicoom/oom/wiki/Lesson-3)
   * Concepts
     * methods as values
     * lambda expressions
@@ -29,7 +29,7 @@
     * interfaces
     * polymorphism
 
-### [Lesson 4 - Software Quality](https://github.com/AVAtric/oom/wiki/Lesson-4)
+### [Lesson 4 - Software Quality](https://github.com/bicoom/oom/wiki/Lesson-4)
   * Concepts
     * refactoring
     * unit tests
@@ -39,19 +39,19 @@
     * serialization (JSON)
     * files
       
-### [Lesson 5 - Code Review](https://github.com/AVAtric/oom/wiki/Lesson-5)
+### [Lesson 5 - Code Review](https://github.com/bicoom/oom/wiki/Lesson-5)
   * review of student projects
   * definition of tasks/issues
   * time for questions, bugfixing, problem solving
 
-### [Lesson 6 - Sequences, Queries and Combinators](https://github.com/AVAtric/oom/wiki/Lesson-6)
+### [Lesson 6 - Sequences, Queries and Combinators](https://github.com/bicoom/oom/wiki/Lesson-6)
   * IEnumerable, foreach, yield return
   * queries and combinators
 
-### [Lesson 7 - Threads, Tasks, Promises and Continuations](https://github.com/AVAtric/oom/wiki/Lesson-7)
+### [Lesson 7 - Threads, Tasks, Promises and Continuations](https://github.com/bicoom/oom/wiki/Lesson-7)
   * threads and tasks
   * promises and continuations
   * reactive programming, async/await
 
-### [Lesson 8 - Final Evaluation](https://github.com/AVAtric/oom/wiki/Lesson-8)
+### [Lesson 8 - Final Evaluation](https://github.com/bicoom/oom/wiki/Lesson-8)
   * final evaluation of student projects
