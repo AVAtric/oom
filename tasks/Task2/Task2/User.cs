@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 
 namespace Task2
 {
-    class User
+    class User : Person
     {
         private string m_email;
 

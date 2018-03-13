@@ -10,18 +10,32 @@ namespace Task2
     {
         static void Main(string[] args)
         {
-            User a = new User("test", "test", "test@test.com", "test");
+            List<object> persons = new List<object>();
+
+            User a = new User("test1", "test1", "test1@test.com", "test");
+            User b = new User("test2", "test2", "test2@test.com", "test");
+            User c = new User("test3", "test3", "test3@test.com", "test");
+
+            Customer c1 = new Customer("cust1", "cust1", "cust1@test.com");
+            Customer c2 = new Customer("cust2", "cust2", "cust2@test.com");
+            Customer c3 = new Customer("cust3", "cust3", "cust3@test.com");
+
+            persons.Add(a);
+            persons.Add(b);
+            persons.Add(c);
+            persons.Add(c1);
+            persons.Add(c2);
+            persons.Add(c3);
+
+            foreach(var onePerson in persons)
+                Console.WriteLine(((Person)onePerson).Email);
 
             Console.WriteLine(a.ToString());
 
             if (a.CheckPassword("test"))
-            {
                 Console.WriteLine("Login success!");
-            }
             else
-            {
                 Console.WriteLine("Login failed!");
-            }
 
             if (a.ChangePassword("test", "test1"))
                 Console.WriteLine("Changed password!");
@@ -40,13 +54,9 @@ namespace Task2
             Console.WriteLine(a.ToString());
 
             if (a.CheckPassword("test"))
-            {
                 Console.WriteLine("Login success!");
-            }
             else
-            {
                 Console.WriteLine("Login failed!");
-            }
         }
     }
 }
