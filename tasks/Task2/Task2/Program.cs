@@ -10,7 +10,7 @@ namespace Task2
     {
         static void Main(string[] args)
         {
-            List<object> persons = new List<object>();
+            List<Person> persons = new List<Person>();
 
             User a = new User("test1", "test1", "test1@test.com", "test");
             User b = new User("test2", "test2", "test2@test.com", "test");
@@ -28,7 +28,7 @@ namespace Task2
             persons.Add(c3);
 
             foreach(var onePerson in persons)
-                Console.WriteLine(((Person)onePerson).Email);
+                Console.WriteLine(onePerson.Email);
 
             Console.WriteLine(a.ToString());
 
