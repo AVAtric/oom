@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace Task2
 {
@@ -26,6 +28,21 @@ namespace Task2
             persons.Add(c1);
             persons.Add(c2);
             persons.Add(c3);
+
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory.ToString(), "SerializedObjects.json");
+
+            if (File.Exists(path))
+                File.Delete(path);
+
+            var persons1 = JsonConvert.SerializeObject(persons);
+
+            Console.WriteLine(persons1);
+
+            File.WriteAllText(path, persons1);
+
+            var persons2 = JsonConvert.DeserializeObject(File.ReadAllText(path));
+
+            Console.WriteLine(persons2.ToString());
 
             foreach(var onePerson in persons)
                 Console.WriteLine(onePerson.Email);

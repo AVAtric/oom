@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 
 namespace Task2
 {
-    class User : Person
+    class User : PersonBase
     {
         private string m_email;
 
@@ -26,6 +26,8 @@ namespace Task2
                 throw new ArgumentException("Email must not be empty.", nameof(email));
             if (string.IsNullOrWhiteSpace(password))
                 throw new ArgumentException("Password must not be empty.", nameof(password));
+            if (!this.isValidEmail(email))
+                throw new ArgumentException("Email must be a valit mail adress.", nameof(email));
 
             this.m_email = email;
             this.FirstName = first_name;
@@ -35,24 +37,9 @@ namespace Task2
         }
 
         /// <summary>
-        /// Gets and sets title of person.
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
-        /// Gets and sets first name.
-        /// </summary>
-        public string FirstName { get; set; }
-
-        /// <summary>
-        /// Gets and sets last name.
-        /// </summary>
-        public string LastName { get; set; }
-
-        /// <summary>
         /// Gets email.
         /// </summary>
-        public string Email
+        public override string Email
         {
             get
             {

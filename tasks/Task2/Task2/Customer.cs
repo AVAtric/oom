@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Task2
 {
-    class Customer : Person
+    class Customer : PersonBase
     {
         public Customer(string first_name, string last_name, string email)
         {
@@ -20,31 +20,22 @@ namespace Task2
             this.Email = email;
             this.FirstName = first_name;
             this.LastName = last_name;
+            this.Visits = 0;
         }
-
-        /// <summary>
-        /// Gets and sets title of person.
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
-        /// Gets and sets first name.
-        /// </summary>
-        public string FirstName { get; set; }
-
-        /// <summary>
-        /// Gets and sets last name.
-        /// </summary>
-        public string LastName { get; set; }
 
         /// <summary>
         /// Gets email.
         /// </summary>
-        public string Email { get; }
+        public override string Email { get; }
 
         /// <summary>
         /// Gets the visits of the customer
         /// </summary>
-        public int Visits { get; }
+        public int Visits { get; set; }
+
+        public void addVisit()
+        {
+            this.Visits = ++this.Visits;
+        }
     }
 }
