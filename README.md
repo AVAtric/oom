@@ -3,8 +3,8 @@
 
 ### [Lesson 1 - Kick Off](https://github.com/bicoom/oom/wiki/Lesson-1)
   * Introduction and Guidelines
-    * [Wiki](https://github.com/AVAtric/oom/wiki)
-    * [Issues](https://github.com/AVAtric/oom/issues)
+    * [Wiki](https://github.com/bicoom/oom/wiki)
+    * [Issues](https://github.com/bicoom/oom/issues)
   * Setting up your development environment
     * C#
     * Git
