@@ -16,35 +16,26 @@ namespace Task2
             m_salt = new byte[16],
             m_hash = new byte[36];
 
-        public User(string first_name, string last_name, string email, string password)
-        {
-            if (string.IsNullOrWhiteSpace(first_name))
-                throw new ArgumentException("First name must not be empty.", nameof(first_name));
-            if (string.IsNullOrWhiteSpace(last_name))
-                throw new ArgumentException("Last name must not be empty.", nameof(last_name));
-            if (string.IsNullOrWhiteSpace(email))
-                throw new ArgumentException("Email must not be empty.", nameof(email));
-            if (string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("Password must not be empty.", nameof(password));
-            if (!this.isValidEmail(email))
-                throw new ArgumentException("Email must be a valit mail adress.", nameof(email));
-
-            this.m_email = email;
-            this.FirstName = first_name;
-            this.LastName = last_name;
-
-            this.SavePassword(password);
-        }
 
         /// <summary>
-        /// Gets email.
+        /// Is user admin.
         /// </summary>
-        public override string Email
+        public bool IsAdmin { get; set; }
+
+        /// <summary>
+        /// Creates user object.
+        /// </summary>
+        /// <param name="first_name">First name</param>
+        /// <param name="last_name">Last name</param>
+        /// <param name="email">Email</param>
+        /// <param name="password">Password</param>
+        public User(string first_name, string last_name, string email, string password) : base(first_name, last_name, email)
         {
-            get
-            {
-                return this.m_email;
-            }
+            if (string.IsNullOrWhiteSpace(password))
+                throw new ArgumentException("Password must not be empty.", nameof(password));
+
+            this.IsAdmin = false;
+            this.SavePassword(password);
         }
 
         /// <summary>
@@ -52,7 +43,7 @@ namespace Task2
         /// </summary>
         /// <param name="old_password">Old password</param>
         /// <param name="new_password">New password</param>
-        /// <returns></returns>
+        /// <returns>True if password change was successful. If not then false.</returns>
         public bool ChangePassword(string old_password, string new_password)
         {
             if (this.CheckPassword(old_password))
@@ -69,7 +60,7 @@ namespace Task2
         /// Checks password.
         /// </summary>
         /// <param name="password">Password</param>
-        /// <returns></returns>
+        /// <returns>True if password is correct. If not then false.</returns>
         public bool CheckPassword(string password)
         {
             byte[] hash = this.HashPassword(password);
@@ -86,7 +77,7 @@ namespace Task2
         /// </summary>
         /// <param name="password">Password to verify</param>
         /// <param name="email">Email</param>
-        /// <returns></returns>
+        /// <returns>True if email is correct. If not then false.</returns>
         public bool ChangeEmail(string password, string email)
         {
             if (this.CheckPassword(password))
@@ -124,18 +115,20 @@ namespace Task2
         /// <summary>
         /// Override method to see all content.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Text with contents of this object.</returns>
         override public string ToString()
         {
             return string.Join("\r\n",
                 new string[] {
-                    "Email: " + this.m_email,
-                    "UUID: " + this.m_uuid.ToString(),
+                    "Gender: " + this.Gender,
                     "Title: " + this.Title,
                     "First name: " + this.FirstName,
                     "Last name: " + this.LastName,
+                    "Email: " + this.m_email,
+                    "UUID: " + this.m_uuid.ToString(),
                     "Salt: " + Convert.ToBase64String(this.m_salt),
-                    "Hash: " + Convert.ToBase64String(this.m_hash) });
+                    "Hash: " + Convert.ToBase64String(this.m_hash)
+                });
         }
     }
 }

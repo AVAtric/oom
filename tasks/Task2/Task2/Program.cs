@@ -5,6 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading;
+using Bogus;
+using System.Reactive.Disposables;
+using System.Reactive.Concurrency;
+using static System.Console;
 
 namespace Task2
 {
@@ -13,21 +20,40 @@ namespace Task2
         static void Main(string[] args)
         {
             List<Person> persons = new List<Person>();
+            var gender = new[] { "male", "female" };
 
-            User a = new User("test1", "test1", "test1@test.com", "test");
-            User b = new User("test2", "test2", "test2@test.com", "test");
-            User c = new User("test3", "test3", "test3@test.com", "test");
+            var test_user = new Faker<User>()
+                .CustomInstantiator(f =>
+                {
+                    var fn = f.Name.FirstName();
+                    var ln = f.Name.LastName();
 
-            Customer c1 = new Customer("cust1", "cust1", "cust1@test.com");
-            Customer c2 = new Customer("cust2", "cust2", "cust2@test.com");
-            Customer c3 = new Customer("cust3", "cust3", "cust3@test.com");
+                    return new User(fn, ln, f.Internet.Email(fn, ln), f.Internet.Password());
+                })
+                .RuleFor(usr => usr.Gender, f => f.PickRandom(gender))
+                .RuleFor(usr => usr.Title, f => f.Name.JobTitle())
+                .RuleFor(usr => usr.IsAdmin, f => f.Random.Bool())
+                ;
 
-            persons.Add(a);
-            persons.Add(b);
-            persons.Add(c);
-            persons.Add(c1);
-            persons.Add(c2);
-            persons.Add(c3);
+            var test_customer = new Faker<Customer>()
+                .CustomInstantiator(f =>
+                {
+                    var fn = f.Name.FirstName();
+                    var ln = f.Name.LastName();
+
+                    return new Customer(fn, ln, f.Internet.Email(fn, ln));
+                })
+                .RuleFor(cust => cust.Gender, f => f.PickRandom(gender))
+                .RuleFor(cust => cust.Title, f => f.Name.JobTitle())
+                .RuleFor(cust => cust.Visits, f => f.Random.Number(1000))
+                .RuleFor(cust => cust.HighPriority, f => f.Random.Bool())
+                ;
+
+            for (var i = 0; i < 3; i++)
+            {
+                persons.Add(test_user.Generate());
+                persons.Add(test_customer.Generate());
+            }
 
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory.ToString(), "SerializedObjects.json");
 
@@ -36,44 +62,150 @@ namespace Task2
 
             var persons1 = JsonConvert.SerializeObject(persons);
 
-            Console.WriteLine(persons1);
+            WriteLine(persons1);
 
             File.WriteAllText(path, persons1);
 
             var persons2 = JsonConvert.DeserializeObject(File.ReadAllText(path));
 
-            Console.WriteLine(persons2.ToString());
+            WriteLine(persons2.ToString());
 
-            foreach(var onePerson in persons)
-                Console.WriteLine(onePerson.Email);
+            foreach (var onePerson in persons)
+                WriteLine(onePerson.Email);
 
-            Console.WriteLine(a.ToString());
+            WriteLine("-----------------------------------------------------------------------------------------------------");
+
+            var a = persons
+                .OfType<User>()
+                .First()
+                ;
+
+            WriteLine(a.ToString());
 
             if (a.CheckPassword("test"))
-                Console.WriteLine("Login success!");
+                WriteLine("Login success!");
             else
-                Console.WriteLine("Login failed!");
+                WriteLine("Login failed!");
 
             if (a.ChangePassword("test", "test1"))
-                Console.WriteLine("Changed password!");
+                WriteLine("Changed password!");
             else
-                Console.WriteLine("Passwort change failed!");
+                WriteLine("Passwort change failed!");
 
             a.Title = "Dr.";
             a.FirstName = "Test1";
             a.LastName = "Test1";
 
             if (a.ChangeEmail("test1", "test1@test.com"))
-                Console.WriteLine("Changed email: " + a.Email);
+                WriteLine("Changed email: " + a.Email);
             else
-                Console.WriteLine("Email  change failed!");
+                WriteLine("Email  change failed!");
 
-            Console.WriteLine(a.ToString());
+            WriteLine(a.ToString());
 
             if (a.CheckPassword("test"))
-                Console.WriteLine("Login success!");
+                WriteLine("Login success!");
             else
-                Console.WriteLine("Login failed!");
+                WriteLine("Login failed!");
+
+            WriteLine("-----------------------------------------------------------------------------------------------------");
+
+            Thread.Sleep(200);
+
+            var customer_producer = new Subject<Customer>();
+
+            customer_producer
+                .Where(x => x.Visits > 500)
+                .Take(10)
+                .Subscribe(x => 
+                    {
+                        WriteLine("*******************BEGIN**CUST*BY*VISITS*****************");
+                        WriteLine(x.ToString());
+                        WriteLine("*******************END****CUST*BY*VISITS*****************");
+                    })
+                ;
+
+            var cts = new CancellationTokenSource();
+
+            Task
+                .Run(() =>
+                    {
+                        var cust_list = new List<Customer>();
+
+                        for(var i = 0; i < 20 ; i++ )
+                        {
+                            Thread.Sleep(200);
+                            cust_list.Add(test_customer.Generate());
+                            customer_producer.OnNext(cust_list.Last());
+                        }
+
+                        return cust_list;
+                    })
+                .ContinueWith(cust => SearchImportantCustomers(cust.Result, cts.Token))
+                ;
+
+            IObservable<User> ob =
+                Observable.Create<User>(o =>
+                {
+                    var cancel = new CancellationDisposable();
+                    NewThreadScheduler.Default.Schedule(() =>
+                    {
+                        for (; ; )
+                        {
+                            Thread.Sleep(200);
+                            if (!cancel.Token.IsCancellationRequested)
+                            {
+                                o.OnNext(test_user.Generate());
+                            }
+                            else
+                            {
+                                o.OnCompleted();
+                                return;
+                            }
+                            
+                        }
+                    }
+                    );
+
+                    return cancel;
+                });
+
+            var user_subscription = ob
+                .Where(usr => usr.IsAdmin == true)
+                .Select(usr => $"{usr.Title} {usr.FirstName} {usr.LastName}")
+                .Take(20)
+                .Finally(() => WriteLine("Press any key to exit!"))
+                .Subscribe(usr =>
+                    {
+                        WriteLine("*******************BEGIN**Admin*****************");
+                        Console.WriteLine(usr);
+                        WriteLine("*******************END****Admin*****************");
+                    })
+                ;
+
+            ReadKey();
+            cts.Cancel();
+            user_subscription.Dispose();
+        }
+
+        static async Task SearchImportantCustomers(List<Customer> customers, CancellationToken ct)
+        {
+            foreach(var cust in customers)
+            {
+                ct.ThrowIfCancellationRequested();
+                if (await IsHighPriorityCustomer(cust, ct)) WriteLine($"{cust.Email} is high priority");
+            }
+        }
+
+        static Task<bool> IsHighPriorityCustomer(Customer usr, CancellationToken ct)
+        {
+            return Task.Run(() =>
+            {
+                Thread.Sleep(200);
+                if (usr.HighPriority) return true;
+
+                return false;
+            }, ct);
         }
     }
 }

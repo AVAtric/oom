@@ -36,7 +36,7 @@ namespace Task2
         public void VisitsIncrementedCorrect()
         {
             var x = new Customer("First", "Last", "example@example.com");
-            x.addVisit();
+            x.AddVisit();
             Assert.IsTrue(x.Visits == 1);
         }
 
